@@ -11,22 +11,22 @@ All colors MUST be HSL.
     --background: 0 0% 100%;
     --foreground: 0 0% 0%;
 
-    --card: 0 0% 100%;
+    --card: 0 0% 98%;
     --card-foreground: 0 0% 0%;
 
-    --popover: 0 0% 100%;
+    --popover: 0 0% 98%;
     --popover-foreground: 0 0% 0%;
 
     --primary: 224 71% 20%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 0 0% 96%;
+    --secondary: 0 0% 92%;
     --secondary-foreground: 0 0% 0%;
 
-    --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 45%;
+    --muted: 0 0% 94%;
+    --muted-foreground: 0 0% 35%;
 
-    --accent: 0 0% 96%;
+    --accent: 0 0% 92%;
     --accent-foreground: 224 71% 20%;
 
     --destructive: 239 68 68;
