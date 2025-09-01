@@ -53,7 +53,7 @@ export const ProductCard = ({ product, quantity, onAddToCart, onUpdateQuantity }
         {quantity === 0 ? (
           <Button 
             onClick={() => onAddToCart(product.id)}
-            className="w-full bg-[var(--gradient-primary)] text-primary-foreground hover:opacity-90 transition-[var(--transition-smooth)]"
+            className="w-full"
           >
             <ShoppingCart className="h-4 w-4 mr-2" />
             Add to Cart
