@@ -21,6 +21,9 @@ interface CartItem extends Product {
 interface Order {
   orderNumber: string;
   items: CartItem[];
+  customerName: string;
+  size: string;
+  status: "Pending" | "Completed";
   timestamp: string;
 }
 
@@ -60,15 +63,18 @@ const App = () => {
       .filter((item): item is CartItem => item !== null);
   };
 
-  const handleCheckout = () => {
+  const handleCheckout = (customerName: string, size: string) => {
     const orderNumber = `ORD-${Date.now().toString().slice(-6)}`;
     const newOrder: Order = {
       orderNumber,
       items: getCartItems(),
-      timestamp: new Date().toISOString()
+      customerName,
+      size,
+      status: "Pending",
+      timestamp: new Date().toISOString(),
     };
-    const existingOrders: Order[] = JSON.parse(localStorage.getItem('orders') || '[]');
-    localStorage.setItem('orders', JSON.stringify([...existingOrders, newOrder]));
+    const existingOrders: Order[] = JSON.parse(localStorage.getItem("orders") || "[]");
+    localStorage.setItem("orders", JSON.stringify([...existingOrders, newOrder]));
     console.log("Order placed:", newOrder);
     setOrderPlaced(orderNumber);
     setCart({});

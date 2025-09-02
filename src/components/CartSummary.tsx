@@ -1,7 +1,16 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
 import { ShoppingCart, Receipt, AlertCircle } from "lucide-react";
 
 interface CartItem {
@@ -13,16 +22,18 @@ interface CartItem {
 
 interface CartSummaryProps {
   items: CartItem[];
-  onCheckout: () => void;
+  onCheckout: (name: string, size: string) => void;
 }
 
 export const CartSummary = ({ items, onCheckout }: CartSummaryProps) => {
   const SCREEN_SETUP_FEE = 1.25;
-  
+
   const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   const hasItems = items.length > 0;
   const total = hasItems ? subtotal + SCREEN_SETUP_FEE : 0;
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
+  const [name, setName] = useState("");
+  const [size, setSize] = useState("");
 
   if (!hasItems) {
     return (
@@ -66,6 +77,25 @@ export const CartSummary = ({ items, onCheckout }: CartSummaryProps) => {
             </div>
           ))}
         </div>
+
+        <div className="space-y-2">
+          <Input
+            placeholder="Your name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <Select value={size} onValueChange={setSize}>
+            <SelectTrigger>
+              <SelectValue placeholder="Select size" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="S">Small</SelectItem>
+              <SelectItem value="M">Medium</SelectItem>
+              <SelectItem value="L">Large</SelectItem>
+              <SelectItem value="XL">XL</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
         
         <Separator />
         
@@ -91,8 +121,9 @@ export const CartSummary = ({ items, onCheckout }: CartSummaryProps) => {
           </div>
         </div>
         
-        <Button 
-          onClick={onCheckout}
+        <Button
+          onClick={() => onCheckout(name, size)}
+          disabled={!name || !size}
           className="w-full bg-[var(--gradient-primary)] text-primary-foreground hover:opacity-90 transition-[var(--transition-smooth)]"
           size="lg"
         >
