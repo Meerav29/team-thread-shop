@@ -11,7 +11,18 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
-import { Package, DollarSign, Clock, Users } from "lucide-react";
+import { Package, DollarSign, Clock, Users, Trash2 } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface OrderItem {
   id: string;
@@ -60,6 +71,12 @@ const Admin = () => {
     const updated = orders.map(order =>
       order.orderNumber === orderNumber ? { ...order, status } : order
     );
+    setOrders(updated);
+    localStorage.setItem("orders", JSON.stringify(updated));
+  };
+
+  const deleteOrder = (orderNumber: string) => {
+    const updated = orders.filter(order => order.orderNumber !== orderNumber);
     setOrders(updated);
     localStorage.setItem("orders", JSON.stringify(updated));
   };
@@ -236,7 +253,7 @@ const Admin = () => {
                       <TableCell>
                         <Badge variant={order.status === "Completed" ? "secondary" : "outline"}>{order.status}</Badge>
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="space-x-2">
                         {order.status === "Pending" && (
                           <Button
                             size="sm"
@@ -245,6 +262,27 @@ const Admin = () => {
                             Mark Complete
                           </Button>
                         )}
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button size="sm" variant="outline">
+                              <Trash2 className="h-4 w-4 mr-1" /> Delete
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Delete this order?</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                This action permanently removes order {order.orderNumber}. This cannot be undone.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <AlertDialogAction onClick={() => deleteOrder(order.orderNumber)}>
+                                Delete
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
                       </TableCell>
                     </TableRow>
                   );
