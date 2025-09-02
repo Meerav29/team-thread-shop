@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Cart from "./pages/Cart";
+import Admin from "./pages/Admin";
 import { Header } from "@/components/Header";
 import { PRODUCTS, Product } from "@/lib/products";
 import { useToast } from "@/hooks/use-toast";
@@ -15,6 +16,12 @@ const queryClient = new QueryClient();
 
 interface CartItem extends Product {
   quantity: number;
+}
+
+interface Order {
+  orderNumber: string;
+  items: CartItem[];
+  timestamp: string;
 }
 
 const App = () => {
@@ -55,11 +62,14 @@ const App = () => {
 
   const handleCheckout = () => {
     const orderNumber = `ORD-${Date.now().toString().slice(-6)}`;
-    console.log("Order placed:", {
+    const newOrder: Order = {
       orderNumber,
       items: getCartItems(),
       timestamp: new Date().toISOString()
-    });
+    };
+    const existingOrders: Order[] = JSON.parse(localStorage.getItem('orders') || '[]');
+    localStorage.setItem('orders', JSON.stringify([...existingOrders, newOrder]));
+    console.log("Order placed:", newOrder);
     setOrderPlaced(orderNumber);
     setCart({});
     toast({
@@ -84,6 +94,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Index cart={cart} addToCart={addToCart} updateQuantity={updateQuantity} />} />
             <Route path="/cart" element={<Cart items={getCartItems()} onCheckout={handleCheckout} orderPlaced={orderPlaced} resetToShopping={resetToShopping} />} />
+            <Route path="/admin" element={<Admin />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

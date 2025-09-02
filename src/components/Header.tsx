@@ -14,10 +14,15 @@ export const Header = ({ cartItemCount }: HeaderProps) => (
           Limited edition team merchandise - Order your items below
         </p>
       </Link>
-      <Link to="/cart" className="flex items-center gap-2 text-foreground">
-        <ShoppingCart className="h-5 w-5" />
-        <span>Cart{cartItemCount > 0 && ` (${cartItemCount})`}</span>
-      </Link>
+      <div className="flex items-center gap-4 text-foreground">
+        <Link to="/admin" className="hover:underline">
+          Admin
+        </Link>
+        <Link to="/cart" className="flex items-center gap-2">
+          <ShoppingCart className="h-5 w-5" />
+          <span>Cart{cartItemCount > 0 && ` (${cartItemCount})`}</span>
+        </Link>
+      </div>
     </div>
   </header>
 );
