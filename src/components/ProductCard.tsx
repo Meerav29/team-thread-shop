@@ -2,14 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ShoppingCart, Plus, Minus } from "lucide-react";
-
-interface Product {
-  id: string;
-  name: string;
-  price: number;
-  image?: string;
-  description?: string;
-}
+import type { Product } from "@/lib/products";
 
 interface ProductCardProps {
   product: Product;
@@ -27,8 +20,19 @@ export const ProductCard = ({ product, quantity, onAddToCart, onUpdateQuantity }
   return (
     <Card className="group hover:shadow-[var(--shadow-hover)] transition-[var(--transition-smooth)] bg-[var(--gradient-card)] border-border overflow-hidden">
       <CardHeader className="pb-4">
-        <div className="aspect-square bg-muted rounded-lg mb-4 flex items-center justify-center">
-          <ShoppingCart className="h-12 w-12 text-muted-foreground" />
+        <div className="aspect-square rounded-lg mb-4 overflow-hidden bg-muted">
+          {product.image ? (
+            <img
+              src={product.image}
+              alt={product.name}
+              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+              loading="lazy"
+            />
+          ) : (
+            <div className="h-full w-full flex items-center justify-center">
+              <ShoppingCart className="h-12 w-12 text-muted-foreground" />
+            </div>
+          )}
         </div>
         <CardTitle className="text-xl text-card-foreground">{product.name}</CardTitle>
         <div className="flex items-center justify-between">
