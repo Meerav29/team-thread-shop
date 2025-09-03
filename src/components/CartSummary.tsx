@@ -34,6 +34,7 @@ export const CartSummary = ({ items, onCheckout }: CartSummaryProps) => {
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
   const [name, setName] = useState("");
   const [size, setSize] = useState("");
+  const canSubmit = name.trim() !== "" && size.trim() !== "";
 
   if (!hasItems) {
     return (
@@ -123,8 +124,12 @@ export const CartSummary = ({ items, onCheckout }: CartSummaryProps) => {
         
         <Button
           onClick={() => onCheckout(name, size)}
-          disabled={!name || !size}
-          className="w-full bg-[var(--gradient-primary)] text-primary-foreground hover:opacity-90 transition-[var(--transition-smooth)]"
+          disabled={!canSubmit}
+          className={`w-full transition-[var(--transition-smooth)] ${
+            canSubmit
+              ? "bg-blue-600 hover:bg-blue-700 text-white"
+              : "bg-gray-300 text-gray-600"
+          }`}
           size="lg"
         >
           <Receipt className="h-4 w-4 mr-2" />
