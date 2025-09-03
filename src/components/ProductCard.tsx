@@ -18,7 +18,7 @@ export const ProductCard = ({ product, quantity, onAddToCart, onUpdateQuantity }
   };
 
   return (
-    <Card className="group hover:shadow-[var(--shadow-hover)] transition-[var(--transition-smooth)] bg-[var(--gradient-card)] border-border overflow-hidden">
+    <Card className="group hover:shadow-[var(--shadow-hover)] transition-[var(--transition-smooth)] bg-[var(--gradient-card)] border-primary overflow-hidden">
       <CardHeader className="pb-4">
         <div className="aspect-square rounded-lg mb-4 overflow-hidden bg-muted">
           {product.image ? (

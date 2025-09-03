@@ -6,7 +6,7 @@ interface HeaderProps {
 }
 
 export const Header = ({ cartItemCount }: HeaderProps) => (
-  <header className="bg-card border-b border-border">
+  <header className="bg-card border-b border-primary">
     <div className="container mx-auto px-4 py-6 flex items-center justify-between">
       <Link to="/" className="text-foreground">
         <h1 className="text-3xl font-bold">Team Merch Store</h1>
