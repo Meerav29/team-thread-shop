@@ -89,6 +89,7 @@ const App = () => {
       title: "Order placed successfully!",
       description: `Order ${orderNumber} has been submitted for review.`,
     });
+
   };
 
   const resetToShopping = () => {

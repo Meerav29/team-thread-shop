@@ -10,7 +10,7 @@ interface CartItem {
 
 interface CartPageProps {
   items: CartItem[];
-  onCheckout: (name: string, size: string) => void;
+  onCheckout: (name: string, size: string) => Promise<void>;
   orderPlaced: string | null;
   resetToShopping: () => void;
 }
