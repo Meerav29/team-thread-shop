@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import {
   Select,
@@ -40,31 +39,18 @@ interface Order {
   timestamp: string;
 }
 
-const ADMIN_PASSWORD = "admin";
-
 const Admin = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(() => localStorage.getItem("adminAuthenticated") === "true");
-  const [password, setPassword] = useState("");
   const [orders, setOrders] = useState<Order[]>([]);
   const [filter, setFilter] = useState<string>("all");
 
   useEffect(() => {
-    if (isLoggedIn) {
-      const stored: Order[] = JSON.parse(localStorage.getItem("orders") || "[]");
-      setOrders(stored);
-    }
-  }, [isLoggedIn]);
+    const stored: Order[] = JSON.parse(localStorage.getItem("orders") || "[]");
+    setOrders(stored);
+  }, []);
 
-  const handleLogin = () => {
-    if (password === ADMIN_PASSWORD) {
-      localStorage.setItem("adminAuthenticated", "true");
-      setIsLoggedIn(true);
-    }
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem("adminAuthenticated");
-    setIsLoggedIn(false);
+  const handleLogout = async () => {
+    await fetch("/auth/logout", { method: "POST", credentials: "include" });
+    window.location.href = "/login";
   };
 
   const updateOrderStatus = (orderNumber: string, status: "Pending" | "Completed") => {
@@ -120,29 +106,6 @@ const Admin = () => {
   const filteredOrders = orders.filter(order =>
     filter === "all" ? true : order.status === filter
   );
-
-  if (!isLoggedIn) {
-    return (
-      <div className="min-h-screen flex items-center justify-center p-4">
-        <Card className="w-full max-w-sm">
-          <CardHeader>
-            <CardTitle>Admin Login</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <Input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-            />
-            <Button className="w-full" onClick={handleLogin}>
-              Login
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen p-4 space-y-6">

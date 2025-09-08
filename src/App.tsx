@@ -8,6 +8,8 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Cart from "./pages/Cart";
 import Admin from "./pages/Admin";
+import Login from "./pages/Login";
+import ProtectedRoute from "@/components/ProtectedRoute";
 import { Header } from "@/components/Header";
 import { PRODUCTS, Product } from "@/lib/products";
 import { useToast } from "@/hooks/use-toast";
@@ -100,7 +102,15 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Index cart={cart} addToCart={addToCart} updateQuantity={updateQuantity} />} />
             <Route path="/cart" element={<Cart items={getCartItems()} onCheckout={handleCheckout} orderPlaced={orderPlaced} resetToShopping={resetToShopping} />} />
-            <Route path="/admin" element={<Admin />} />
+            <Route path="/login" element={<Login />} />
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute>
+                  <Admin />
+                </ProtectedRoute>
+              }
+            />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
