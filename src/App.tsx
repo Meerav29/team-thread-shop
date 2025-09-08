@@ -63,7 +63,7 @@ const App = () => {
       .filter((item): item is CartItem => item !== null);
   };
 
-  const handleCheckout = (customerName: string, size: string) => {
+  const handleCheckout = async (customerName: string, size: string) => {
     const orderNumber = `ORD-${Date.now().toString().slice(-6)}`;
     const newOrder: Order = {
       orderNumber,
@@ -73,8 +73,13 @@ const App = () => {
       status: "Pending",
       timestamp: new Date().toISOString(),
     };
-    const existingOrders: Order[] = JSON.parse(localStorage.getItem("orders") || "[]");
-    localStorage.setItem("orders", JSON.stringify([...existingOrders, newOrder]));
+    await fetch(`${import.meta.env.VITE_API_URL}/orders`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newOrder),
+    });
     console.log("Order placed:", newOrder);
     setOrderPlaced(orderNumber);
     setCart({});
