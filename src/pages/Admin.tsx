@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -40,31 +41,51 @@ interface Order {
 }
 
 const Admin = () => {
-  const [orders, setOrders] = useState<Order[]>([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(() => localStorage.getItem("adminAuthenticated") === "true");
+  const [password, setPassword] = useState("");
   const [filter, setFilter] = useState<string>("all");
 
-  useEffect(() => {
-    const stored: Order[] = JSON.parse(localStorage.getItem("orders") || "[]");
-    setOrders(stored);
-  }, []);
+  const { data: orders = [], refetch } = useQuery<Order[]>({
+    queryKey: ["orders"],
+    queryFn: async () => {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/orders`);
+      if (!res.ok) throw new Error("Failed to fetch orders");
+      return res.json();
+    },
+    enabled: isLoggedIn,
+  });
+
+  const handleLogin = () => {
+    if (password === ADMIN_PASSWORD) {
+      localStorage.setItem("adminAuthenticated", "true");
+      setIsLoggedIn(true);
+    }
+  };
 
   const handleLogout = async () => {
     await fetch("/auth/logout", { method: "POST", credentials: "include" });
     window.location.href = "/login";
   };
 
-  const updateOrderStatus = (orderNumber: string, status: "Pending" | "Completed") => {
-    const updated = orders.map(order =>
-      order.orderNumber === orderNumber ? { ...order, status } : order
-    );
-    setOrders(updated);
-    localStorage.setItem("orders", JSON.stringify(updated));
+  const updateOrderStatus = async (
+    orderNumber: string,
+    status: "Pending" | "Completed"
+  ) => {
+    await fetch(`${import.meta.env.VITE_API_URL}/orders/${orderNumber}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ status }),
+    });
+    refetch();
   };
 
-  const deleteOrder = (orderNumber: string) => {
-    const updated = orders.filter(order => order.orderNumber !== orderNumber);
-    setOrders(updated);
-    localStorage.setItem("orders", JSON.stringify(updated));
+  const deleteOrder = async (orderNumber: string) => {
+    await fetch(`${import.meta.env.VITE_API_URL}/orders/${orderNumber}`, {
+      method: "DELETE",
+    });
+    refetch();
   };
 
   const exportCSV = () => {

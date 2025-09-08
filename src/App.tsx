@@ -75,36 +75,21 @@ const App = () => {
       status: "Pending",
       timestamp: new Date().toISOString(),
     };
+    await fetch(`${import.meta.env.VITE_API_URL}/orders`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newOrder),
+    });
+    console.log("Order placed:", newOrder);
+    setOrderPlaced(orderNumber);
+    setCart({});
+    toast({
+      title: "Order placed successfully!",
+      description: `Order ${orderNumber} has been submitted for review.`,
+    });
 
-    try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/orders`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newOrder),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to place order");
-      }
-
-      console.log("Order placed:", newOrder);
-      setOrderPlaced(orderNumber);
-      setCart({});
-      toast({
-        title: "Order placed successfully!",
-        description: `Order ${orderNumber} has been submitted for review.`,
-      });
-    } catch (error) {
-      console.error("Checkout error:", error);
-      toast({
-        title: "Error placing order",
-        description:
-          error instanceof Error ? error.message : "Please try again later.",
-        variant: "destructive",
-      });
-    }
   };
 
   const resetToShopping = () => {
