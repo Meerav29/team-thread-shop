@@ -22,7 +22,7 @@ interface CartItem {
 
 interface CartSummaryProps {
   items: CartItem[];
-  onCheckout: (name: string, size: string) => void;
+  onCheckout: (name: string, size: string) => Promise<void>;
 }
 
 export const CartSummary = ({ items, onCheckout }: CartSummaryProps) => {
@@ -123,7 +123,9 @@ export const CartSummary = ({ items, onCheckout }: CartSummaryProps) => {
         </div>
         
         <Button
-          onClick={() => onCheckout(name, size)}
+          onClick={() => {
+            void onCheckout(name, size);
+          }}
           disabled={!canSubmit}
           className={`w-full transition-[var(--transition-smooth)] ${
             canSubmit
